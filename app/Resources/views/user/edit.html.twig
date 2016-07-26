@@ -1,0 +1,56 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<div class="row">
+
+    <div class="col-lg-6">
+
+        <form class="form form-horizontal ajax-form" action="{{ path('user_edit', {id: item.id}) }}" method="post" data-target="#userDetail" data-reload="#userTable">
+
+            {{ form_widget(form) }}
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <form class="form-inline ajax-form" action="{{ path('user_add_customer', {id: item.id}) }}" method="post" data-target="#userDetail">
+
+            <div class="form-group">
+                <input class="form-control" type="text" name="customerNumber" placeholder="Customer Number">
+            </div>
+
+            <button class="btn btn-default" type="submit">Add</button>
+
+        </form>        
+
+        <br>
+
+        <form class="form ajax-form" action="{{ path('user_remove_customer', {id: item.id}) }}" method="post" data-target="#userDetail">
+
+            <div class="form-group">
+
+                <label for="customerNumber">Customer Numbers</label>
+                <select class="form-control" name="customerNumber" multiple>
+                    {% for customerNumber in item.customerNumbers %}
+                        <option value="{{ customerNumber }}">{{ customerNumber }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+            <button class="btn btn-default" type="submit">Remove</button>
+
+        </form>
+
+    </div>
+
+</div>
+        
+<a class="btn btn-danger ajax-link pull-right" href="{{ path('user_view', {id: item.id}) }}" data-target="#userDetail">Cancel</a>

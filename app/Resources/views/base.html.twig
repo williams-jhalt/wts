@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Williams Trading System{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block stylesheets %} 
+            {% stylesheets filter="cssrewrite,scssphp" output='css/compiled/main.css'
+                'assets/vendor/bootstrap/dist/css/bootstrap.css'
+                'assets/vendor/datatables/media/css/dataTables.bootstrap.css'
+                'assets/vendor/datatables-responsive/css/responsive.bootstrap.scss'
+                'assets/vendor/metisMenu/dist/metisMenu.css'
+                'assets/vendor/morrisjs/morris.css'
+                'assets/vendor/font-awesome/css/font-awesome.css'
+                'assets/vendor/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css'
+                'assets/vendor/startbootstrap-sb-admin-2/dist/css/timeline.css'
+                'assets/vendor/jstree-bootstrap-theme/dist/themes/default/style.css'
+                'assets/vendor/jstree-bootstrap-theme/dist/themes/proton/style.css'
+            %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
+        {% block javascripts %}            
+            {% javascripts filter="?jsqueeze" output='js/compiled/main.js'
+                'assets/vendor/jquery/dist/jquery.js'
+                'assets/vendor/bootstrap/dist/js/bootstrap.js'
+                'assets/vendor/datatables/media/js/jquery.dataTables.js'
+                'assets/vendor/datatables/media/js/dataTables.bootstrap.js'
+                'assets/vendor/datatables-responsive/js/dataTables.responsive.js'
+                'assets/vendor/metisMenu/dist/metisMenu.js'
+                'assets/vendor/raphael/raphael.js'
+                'assets/vendor/morrisjs/morris.js'
+                'assets/vendor/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'
+                'assets/vendor/jstree-bootstrap-theme/dist/jstree.js'
+            %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+            <script type="text/javascript">
+                $(document).on('click', 'a.ajax-link', function (e) {
+                    e.preventDefault();
+                    $('.nav a').removeClass('active');
+                    $(this).addClass('active');
+                    var target = $(this).data('target');
+                    var href = $(this).attr('href');
+                    $(target).html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+                    $(target).load(href);
+                    return false;
+                });
+                $(document).on('submit', 'form.ajax-form', function (e) {
+                    e.preventDefault();
+                    var target = $(this).data('target');
+                    var reload = $(this).data('reload');
+                    var reloadTree = $(this).data('reload-tree');
+                    $.post($(this).attr('action'), $(this).serialize(), function (data) {
+                        $(target).html(data);
+                        if (reload !== undefined) {
+                            $(reload).dataTable().api().ajax.reload(null, false);
+                        }
+                        if (reloadTree !== undefined) {
+                            $(reloadTree).jstree("refresh");
+                        }
+                    });
+                    return false;
+                });
+            </script>
+        {% endblock %}
+    </head>
+    <body>     
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('homepage') }}">Williams Trading</a>
+            </div>
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+
+                    <ul class="nav" id="side-menu">
+                        <li><a href="{{ path('homepage') }}"><i class="fa fa-home"></i> Home</a></li>
+                            {% if is_granted('ROLE_USER') %}
+                            <li><a class="ajax-link" data-target="#page-wrapper" href="{{ path('dashboard_index') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                            <li>
+                                <a href="#"><i class="fa fa-database"></i> Catalog <span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('product_index') }}"><i class="fa fa-list"></i> Products</a>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('producttype_index') }}"><i class="fa fa-list"></i> Product Types</a>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('manufacturer_index') }}"><i class="fa fa-list"></i> Manufacturers</a>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('category_index') }}"><i class="fa fa-list"></i> Categories</a>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('product_attachment_index') }}"><i class="fa fa-list"></i> Attachments</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_CUSTOMER') or is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="#"><i class="fa fa-database"></i> Weborders <span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('salesorder_index') }}"><i class="fa fa-list"></i> Orders</a>
+                                    </li>
+                                    <li>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('shipment_index') }}"><i class="fa fa-list"></i> Shipments</a>
+                                    </li>
+                                    <li>
+                                        <a class="ajax-link" data-target="#page-wrapper" href="{{ path('invoice_index') }}"><i class="fa fa-list"></i> Invoices</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a class="ajax-link" data-target="#page-wrapper" href="{{ path('user_index') }}"><i class="fa fa-list"></i> Users</a></li>
+                            {% endif %}
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-lock"></i> Logout</a></li>
+                            {% else %}
+                            <li><a href="{{ path('fos_user_security_login') }}"><i class="fa fa-lock"></i> Login</a></li>
+                            {% endif %}
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper">
+
+            {% block body %}{% endblock %}
+
+        </div>
+    </body>
+</html>

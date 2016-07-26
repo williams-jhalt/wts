@@ -1,0 +1,14 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<form class="form form-horizontal ajax-form" action="{{ path('manufacturer_edit', {id: item.id}) }}" method="post" data-target="#manufacturerDetail" data-reload="#manufacturerTable">
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <a class="btn btn-danger ajax-link" href="{{ path('manufacturer_view', {id: item.id}) }}" data-target="#manufacturerDetail">Cancel</a>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,23 @@
+
+
+<br>
+
+{% for item in items %}
+
+    <div class="row">
+        <div class="panel panel-default col-lg-12">
+            <div class="panel-heading">
+                {{ item.title }}
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Start Date</dt>
+                    <dd>{{ item.startDate|date('h:i:s m/d/y') }}</dd>
+                    <dt>End Date</dt>
+                    <dd>{{ item.endDate|date('h:i:s m/d/y') }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}

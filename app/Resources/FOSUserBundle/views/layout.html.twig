@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Williams Trading System{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block stylesheets %} 
+            {% stylesheets filter="cssrewrite,scssphp" output='css/compiled/login.css'
+                'assets/vendor/bootstrap/dist/css/bootstrap.css'
+                'assets/vendor/metisMenu/dist/metisMenu.css'
+                'assets/vendor/font-awesome/css/font-awesome.css'
+                'assets/vendor/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css'
+            %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
+        {% block javascripts %}            
+            {% javascripts filter="?jsqueeze" output='js/compiled/login.js'
+                'assets/vendor/jquery/dist/jquery.js'
+                'assets/vendor/bootstrap/dist/js/bootstrap.js'
+                'assets/vendor/metisMenu/dist/metisMenu.js'
+                'assets/vendor/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'
+            %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
+    </head>
+    <body>     
+
+        {% block fos_user_content %}{% endblock %}
+
+    </body>
+</html>

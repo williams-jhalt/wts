@@ -1,0 +1,28 @@
+<div class="row">
+
+    <div class="col-lg-10">
+
+        <dl class="dl-horizontal">
+
+            <dt>Code</dt>
+            <dd>{{ item.code }}</dd>
+
+            <dt>Name</dt>
+            <dd>{{ item.name }}</dd>
+
+            <dt>Products</dt>
+            <dd>{{ item.products.count() }}
+
+        </dl>
+
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+
+        <div class="col-lg-2 text-right">
+            <a class="btn btn-primary ajax-link" href="{{ path('producttype_edit', {id: item.id}) }}" data-target="#productTypeDetail"><i class="fa fa-edit"></i> Edit</a>
+        </div>
+
+    {% endif %}
+
+</div>

@@ -1,0 +1,124 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#shipmentTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            responsive: {
+                details: false
+            },
+            "ajax": {
+                url: Routing.generate('shipment_list'),
+                type: 'POST',
+                data: function (d) {
+                    d.show = $("select[name='orderFilter']").val();
+                }
+            },
+            "columns": [
+                {"data": "manifestId", "name": "p.manifestId"},
+                {"data": "packageCount", "name": "packageCount", "bSortable": false},
+                {
+                    "data": "orderDate",
+                    "name": "orderDate",
+                    "render": function (data) {
+                        var date = new Date(data.date);
+                        return date.toDateString();
+                    },
+                    "bSortable": false
+                },
+                {"data": "customerNumber", "name": "customerNumber", "bSortable": false}
+            ],
+            "order": [[0, "desc"]]
+        });
+
+        $('#shipmentDetailRow').on('click', 'button.close', function () {
+            $('#shipmentDetailRow').hide();
+            $('#shipmentTableRow').slideDown();
+        });
+
+        $('#shipmentTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#shipmentTableRow').slideUp();
+            $('#shipmentDetailRow').show();
+
+            var data = table.row(this).data();
+
+            $('#shipmentDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+
+            $('#shipmentDetail').load(Routing.generate('shipment_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+        $("select[name='orderFilter']").on('change', function () {
+            table.ajax.reload();
+        });
+
+    });
+</script>
+
+<br>
+
+<div class="row" id="shipmentTableRow">
+    <div class="col-lg-12">    
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+
+                <form id="formFilter" class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" name="orderFilter">
+                            <option value="completed">Completed Shipments</option>
+                            <option value="pending">Pending Shipments</option>
+                        </select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="panel-body">
+
+                <table id="shipmentTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Manifest ID</th>
+                            <th># Packages</th>
+                            <th>Order Date</th>
+                            <th>Customer Number</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Manifest ID</th>
+                            <th># Packages</th>
+                            <th>Order Date</th>
+                            <th>Customer Number</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row" id="shipmentDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">                    
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Shipment Detail
+            </div>
+            <div class="panel-body" id="shipmentDetail">
+                <img src="{{ asset('images/loading.gif') }}">
+            </div>
+        </div>
+    </div>
+</div>

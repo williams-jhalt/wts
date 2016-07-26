@@ -1,0 +1,120 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#orderTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            responsive: {
+                details: false
+            },
+            "ajax": {
+                url: Routing.generate('salesorder_list'),
+                type: 'POST',
+                data: function (d) {
+                    d.show = $("select[name='orderFilter']").val();
+                }
+            },
+            "columns": [
+                {"data": "orderNumber", "name": "p.orderNumber"},
+                {"data": "customerNumber", "name": "p.customerNumber"},
+                {"data": "customerPO", "name": "p.customerPO"},
+                {
+                    "data": "orderDate",
+                    "name": "p.orderDate",
+                    "render": function (data) {
+                        var date = new Date(data.date);
+                        return date.toDateString();
+                    }
+                }
+            ],
+            "order": [[0, "desc"]]
+        });
+        $('#orderDetailRow').on('click', 'button.close', function () {
+            $('#orderDetailRow').hide();
+            $('#orderTableRow').slideDown();
+        });
+        $('#orderTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#orderTableRow').slideUp();
+            $('#orderDetailRow').show();
+            var data = table.row(this).data();
+            
+            $('#orderDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+            
+            $('#orderDetail').load(Routing.generate('salesorder_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+        $("select[name='orderFilter']").on('change', function () {
+            table.ajax.reload();
+        });
+    });
+</script>
+
+<br>
+
+<div class="row" id="orderTableRow">
+    <div class="col-lg-12">    
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+
+                <form id="formFilter" class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" name="orderFilter">
+                            <option value="all">All Orders</option>
+                            <option value="open">Open Orders</option>
+                            <option value="closed">Closed Orders</option>
+                            <option value="credit">Credits</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-body">
+
+                <table id="orderTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Customer</th>
+                            <th>Customer PO</th>
+                            <th>Order Date</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Customer</th>
+                            <th>Customer PO</th>
+                            <th>Order Date</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row" id="orderDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">                    
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Order Detail
+            </div>
+            <div class="panel-body" id="orderDetail">
+                <img src="{{ asset('images/loading.gif') }}">
+            </div>
+        </div>
+    </div>
+</div>

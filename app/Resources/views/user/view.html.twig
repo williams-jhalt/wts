@@ -1,0 +1,30 @@
+<div class="row">
+
+    <div class="col-xs-6">
+
+        <dl class="dl-horizontal">
+
+            <dt>Username</dt>
+            <dd>{{ item.username }}</dd>
+
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ item.email }}">{{ item.email }}</a></dd>
+
+            <dt>Customer Numbers</dt>
+            <dd>{{ item.customerNumbers|join(',') }}</dd>
+
+            <dt>Administrator</dt>
+            <dd>{% if item.admin %}yes{% else %}no{% endif %}</dd>
+
+        </dl>
+
+    </div>
+
+    <div class="col-xs-6 text-right">
+        <div class="btn-group">
+            <a class="btn btn-default ajax-link" href="{{ path('user_change_password', {id: item.id}) }}" data-target="#userDetail"><i class="fa fa-lock"></i> Change Password</a>
+            <a class="btn btn-primary ajax-link" href="{{ path('user_edit', {id: item.id}) }}" data-target="#userDetail"><i class="fa fa-edit"></i> Edit</a>
+        </div>
+    </div>
+
+</div>

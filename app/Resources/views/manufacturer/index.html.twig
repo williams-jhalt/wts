@@ -1,0 +1,84 @@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#manufacturerTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: Routing.generate('manufacturer_list'),
+                type: 'POST'
+            },
+            "columns": [
+                {"data": "code", "name": "p.code"},
+                {"data": "name", "name": "p.name"},
+                {"data": "productCount", "name": "productCount", "bSortable": false}
+            ]
+        });
+
+        $('#manufacturerDetailRow').on('click', 'button.close', function () {
+            $('#manufacturerDetailRow').hide();
+            $('#manufacturerTableRow').slideDown();
+        });
+
+        $('#manufacturerTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#manufacturerTableRow').slideUp();
+            $('#manufacturerDetailRow').show();
+
+            var data = table.row(this).data();
+
+            $('#manufacturerDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+
+            $('#manufacturerDetail').load(Routing.generate('manufacturer_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+    });
+</script>
+
+<br>
+
+<div class="row" id="manufacturerTableRow">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">All Manufacturers</div>
+            <div class="panel-body">
+
+                <table id="manufacturerTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Products</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Products</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="manufacturerDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Manufacturer Detail
+            </div>
+            <div class="panel-body" id="manufacturerDetail"></div>
+        </div>
+    </div>
+</div>

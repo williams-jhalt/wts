@@ -1,0 +1,11 @@
+version: 1
+cron:
+ - name: "load-products"
+   url: "/tasks/load-products"
+   schedule: "0 * * * *"
+ - name: "load-new-orders"
+   url: "/tasks/load-new-orders"
+   schedule: "15 * * * *"
+ - name: "update-open-orders"
+   url: "/tasks/update-open-orders"
+   schedule: "30 * * * *"

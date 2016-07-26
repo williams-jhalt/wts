@@ -1,0 +1,142 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#invoiceTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            responsive: {
+                details: false
+            },
+            "ajax": {
+                url: Routing.generate('invoice_list'),
+                type: 'POST',
+                data: function (d) {
+                    d.show = $("select[name='invoiceFilter']").val();
+                }
+            },
+            "columns": [
+                {"data": "orderNumber", "name": "p.orderNumber"},
+                {
+                    "data": "orderDate",
+                    "name": "orderDate",
+                    "render": function (data) {
+                        var date = new Date(data.date);
+                        return date.toDateString();
+                    },
+                    "bSortable": false
+                },
+                {"data": "grossAmount", "name": "p.grossAmount", "render": function (data) {
+                        return "$" + new Number(data).toFixed(2);
+                    }},
+                {"data": "freightCharge", "name": "p.freightCharge", "render": function (data) {
+                        return "$" + new Number(data).toFixed(2);
+                    }},
+                {"data": "shippingAndHandlingCharge", "name": "p.shippingAndHandlingCharge", "render": function (data) {
+                        return "$" + new Number(data).toFixed(2);
+                    }},
+                {"data": "netAmount", "name": "p.netAmount", "render": function (data) {
+                        return "$" + new Number(data).toFixed(2);
+                    }},
+                {"data": "customerNumber", "name": "customerNumber", "bSortable": false}
+            ],
+            "order": [[0, "desc"]]
+        });
+
+        $('#invoiceDetailRow').on('click', 'button.close', function () {
+            $('#invoiceDetailRow').hide();
+            $('#invoiceTableRow').slideDown();
+        });
+
+        $('#invoiceTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#invoiceTableRow').slideUp();
+            $('#invoiceDetailRow').show();
+
+            var data = table.row(this).data();
+
+            $('#invoiceDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+
+            $('#invoiceDetail').load(Routing.generate('invoice_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+
+        $("select[name='invoiceFilter']").on('change', function () {
+            table.ajax.reload();
+        });
+
+    });
+</script>
+
+<br>
+
+<div class="row" id="invoiceTableRow">
+    <div class="col-lg-12">    
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+
+                <form id="formFilter" class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control" name="invoiceFilter">
+                            <option value="all">All Invoices</option>
+                            <option value="open">Open Invoices</option>
+                            <option value="closed">Closed Invoices</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-body">
+
+                <table id="invoiceTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Invoice Number</th>
+                            <th>Order Date</th>
+                            <th>Gross Amt.</th>
+                            <th>Freight</th>
+                            <th>S&amp;H</th>
+                            <th>Balance Due</th>
+                            <th>Customer Number</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Invoice Number</th>
+                            <th>Order Date</th>
+                            <th>Gross Amt.</th>
+                            <th>Freight</th>
+                            <th>S&amp;H</th>
+                            <th>Balance Due</th>
+                            <th>Customer Number</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row" id="invoiceDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">                    
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Invoice Detail
+            </div>
+            <div class="panel-body" id="invoiceDetail">
+                Please select an invoice
+            </div>
+        </div>
+    </div>
+</div>

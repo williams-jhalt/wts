@@ -1,0 +1,114 @@
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Dashboard</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>Weborders</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-shopping-cart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ totalOpenOrderCount }}</div>
+                            <div>Open Orders</div>
+                        </div>
+                    </div>
+                </div>
+                <a class="ajax-link" data-target="#page-wrapper" href="{{ path('salesorder_index') }}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-exclamation fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ ordersShippedMissingTracking }}</div>
+                            <div>Shipments Missing Tracking</div>
+                        </div>
+                    </div>
+                </div>
+                <a class="ajax-link" data-target="#page-wrapper" href="{{ path('shipment_index') }}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>Catalog</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-list fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ totalProductCount }}</div>
+                            <div>Total Products</div>
+                        </div>
+                    </div>
+                </div>
+                <a class="ajax-link" data-target="#page-wrapper" href="{{ path('product_index') }}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-exclamation fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ productsMissingAttachments }}</div>
+                            <div>Products Missing Attachments</div>
+                        </div>
+                    </div>
+                </div>
+                <a class="ajax-link" data-target="#page-wrapper" href="{{ path('product_index') }}">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+

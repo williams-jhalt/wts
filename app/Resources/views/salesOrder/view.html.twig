@@ -1,0 +1,133 @@
+
+
+<dl class="dl-horizontal">
+
+    <dt>Order Number</dt>
+    <dd>{{ item.orderNumber }}</dd>
+
+    {% if item.externalOrderNumber is not empty %}
+        <dt>Ext. Order Number</dt>
+        <dd>{{ item.externalOrderNumber }}</dd>
+    {% endif %}
+
+    <dt>Customer Number</dt>
+    <dd>{{ item.customerNumber }}</dd>
+
+    <dt>Order Date</dt>
+    <dd>{{ item.orderDate|date('m/d/y') }}</dd>
+
+    {% if item.customerPO is not empty %}
+        <dt>Customer PO</dt>
+        <dd>{{ item.customerPO }}</dd>
+    {% endif %}
+
+    <dt>Ship To</dt>
+    <dd>
+        <address>
+            {{ item.shipToName }}<br>
+            {{ item.shipToAddress1 }}<br>
+            {% if item.shipToAddress2 is not empty %}
+                {{ item.shipToAddress2 }}<br>
+            {% endif %}
+            {% if item.shipToAddress3 is not empty %}
+                {{ item.shipToAddress3 }}<br>
+            {% endif %}
+            {{ item.shipToCity }}, {{ item.shipToState }} {{ item.shipToPostalCode }}<br>
+            {{ item.shipToCountryCode }}
+        </address>
+    </dd>
+
+</dl>    
+
+<h2>Items</h2>
+
+<table class="table table-condensed dataTable">
+    <thead>
+        <tr>
+            <th>Item Number</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty Ordered</th>
+            <th>Ext. Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in item.items %}
+            <tr>
+                <td>{{ i.itemNumber }}</td>
+                <td>{{ i.name }}</td>
+                <td>${{ i.price|number_format(2) }}</td>
+                <td>{{ i.quantityOrdered }}</td>
+                <td>${{ (i.price * i.quantityOrdered)|number_format(2) }}</td>
+
+            </tr>    
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Item Number</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty Ordered</th>
+            <th>Ext. Price</th>
+        </tr>
+    </tfoot>
+</table>
+
+{% if invoices|length > 0 %}
+
+    <h2>Invoices</h2>
+
+    <table class="table table-condensed">
+        <tr>
+            <th>Invoice Number</th>
+            <th>Gross Amt.</th>
+            <th>Freight</th>
+            <th>S&amp;H</th>
+            <th>Net Amt.</th>
+        </tr>
+        {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.orderNumber }}-{{ invoice.recordSequence }}</td>
+                <td>${{ invoice.grossAmount|number_format(2) }}</td>
+                <td>${{ invoice.freightCharge|number_format(2) }}</td>
+                <td>${{ invoice.shippingAndHandlingCharge|number_format(2) }}</td>
+                <td>${{ invoice.netAmount|number_format(2) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
+
+{% if shipments|length > 0 %}
+
+    <h2>Shipments</h2>
+
+    <table class="table table-condensed">
+        <tr>
+            <th style="width:10%;">Manifest ID</th>
+            <th>Packages</th>
+        </tr>
+        {% for shipment in shipments %}
+            <tr>
+                <td>{{ shipment.manifestId }}</td>
+                <td>
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>Tracking Number</th>
+                            <th>Shipping Cost</th>
+                        </tr>
+                        {% for package in shipment.packages %}
+                            <tr>
+                                <td>{{ package.trackingNumber }}</td>
+                                <td>${{ package.shippingCost|number_format(2) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>                        
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
+

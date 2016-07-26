@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#categoryTree').jstree({
+            "plugins": ["wholerow"],
+            'core': {
+                'data': {
+                    'url': function (node) {
+                        if (node.id === '#') {
+                            return Routing.generate('category_tree');
+                        } else {
+                            return Routing.generate('category_tree', {id: node.id});
+                        }
+                    },
+                    'data': function (node) {
+                        return {'id': node.id};
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<br>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Categories</div>
+            <div class="panel-body">
+                <div id="categoryTree"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Category Detail
+            </div>
+            <div class="panel-body" id="categoryDetail"></div>
+        </div>
+    </div>
+</div>

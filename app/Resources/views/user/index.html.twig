@@ -1,0 +1,127 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#userTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: Routing.generate('user_list'),
+                type: 'POST'
+            },
+            "columns": [
+                {"data": "username", "name": "p.username"},
+                {"data": "email", "name": "p.email"},
+                {
+                    "data": "lastLogin",
+                    "name": "p.lastLogin",
+                    "render": function (data) {
+                        if (data === null) {
+                            return "No Login";
+                        }
+                        var date = new Date(data.date);
+                        return date.toDateString();
+                    }
+                }
+            ]
+        });
+
+        $('#userDetailRow').on('click', 'button.close', function () {
+            $('#userDetailRow').hide();
+            $('#userTableRow').slideDown();
+        });
+
+        $('#userAddRow').on('click', 'button.close', function () {
+            $('#userAddRow').hide();
+            $('#userTableRow').slideDown();
+        });
+
+        $('#userTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#userTableRow').slideUp();
+            $('#userDetailRow').show();
+
+            var data = table.row(this).data();
+
+            $('#userDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+
+            $('#userDetail').load(Routing.generate('user_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+
+        $('#userTableRow').on('click', 'a.add-user-button', function () {
+            $(this).removeClass('active');
+
+            $('#userTableRow').slideUp();
+            $('#userAddRow').show();
+
+            $('#userAdd').load(Routing.generate('user_add'));
+        });
+    });
+</script>
+
+<br>
+
+<div class="row" id="userTableRow">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">All Products</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="btn btn-default add-user-button"><i class="fa fa-plus-circle"></i> Add User</a>
+                    </div>
+                </div>
+
+                <br>
+
+                <table id="userTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="userDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                User Detail
+            </div>
+            <div class="panel-body" id="userDetail"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="userAddRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Add User
+            </div>
+            <div class="panel-body" id="userAdd"></div>
+        </div>
+    </div>
+</div>

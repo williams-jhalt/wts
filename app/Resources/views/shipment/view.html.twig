@@ -1,0 +1,26 @@
+<dl class="dl-horizontal">
+    
+    <dt>Manifest ID</dt>
+    <dd>{{ item.manifestId }}</dd>
+    
+    <dt>Packages</dt>
+    <dd>
+        {% if item.packages is empty %}
+            Tracking information for this order is currently unavailable
+        {% else %}
+            <table class="table table-condensed">
+                <tr>
+                    <th>Tracking Number</th>
+                    <th>Shipping Cost</th>
+                </tr>
+                {% for package in item.packages %}
+                    <tr>
+                        <td>{{ package.trackingNumber }}</td>
+                        <td>${{ package.shippingCost|number_format(2) }}</td>
+                    </tr>
+                {% endfor %}        
+            </table>
+        {% endif %}
+    </dd>
+    
+</dl>

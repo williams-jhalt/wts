@@ -1,0 +1,14 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<form class="form form-horizontal ajax-form" action="{{ path('user_add') }}" method="post" data-target="#userAdd" data-reload="#userTable">
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-default" type="reset">Reset</button>
+        </div>
+    </div>
+
+</form>

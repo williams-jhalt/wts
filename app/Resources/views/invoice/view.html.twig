@@ -1,0 +1,50 @@
+{% if not item.open %}
+    <p class="pull-right">
+        <a href="{{ path('invoice_viewpdf_file', {record: item.orderNumber, sequence: item.recordSequence}) }}" target="_blank">View PDF</a>
+    </p>
+{% endif %}
+
+<dl class="dl-horizontal">
+
+    <dt>Invoice Number</dt>
+    <dd>{{ item.orderNumber }}-{{ item.recordSequence }}</dd>
+
+</dl>    
+
+<table class="table table-condensed dataTable">
+    <thead>
+        <tr>
+            <th>Item Number</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty Ordered</th>
+            <th>Qty Shipped</th>
+            <th>Qty Billed</th>
+            <th>Ext. Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in item.items %}
+            <tr>
+                <td>{{ i.itemNumber }}</td>
+                <td>{{ i.name }}</td>
+                <td>${{ i.price|number_format(2) }}</td>
+                <td>{{ i.quantityOrdered }}</td>
+                <td>{{ i.quantityShipped }}</td>
+                <td>{{ i.quantityBilled }}</td>
+                <td>${{ (i.price * i.quantityBilled)|number_format(2) }}</td>
+            </tr>    
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Item Number</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty Ordered</th>
+            <th>Qty Shipped</th>
+            <th>Qty Billed</th>
+            <th>Ext. Price</th>
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,15 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<form class="form form-horizontal ajax-form" action="{{ path('product_attachment_edit', {id: item.id}) }}" method="post" data-target="#productAttachmentDetail" data-reload="#productAttachmentTable">
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-primary" type="submit">Update</button>
+        </div>
+    </div>
+
+</form>
+
+<a class="btn btn-danger ajax-link pull-right" href="{{ path('product_attachment_view', {id: item.id}) }}" data-target="#productAttachmentDetail">Cancel</a>

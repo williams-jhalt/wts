@@ -1,0 +1,93 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#productAttachmentTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: Routing.generate('product_attachment_list'),
+                type: 'POST'
+            },
+            "columns": [
+                {
+                    "data": "id", 
+                    "name": "p.id",
+                    "render": function (data) {
+                        return '<img src="' + Routing.generate("show_image", {id: data, height: 50, width: 50}) + '">';
+                    }
+                },
+                {
+                    "data": "explicit",
+                    "name": "p.explicit",
+                    "render": function (data) {
+                        return (data) ? '<div class="text-center"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></div>' : '<div class="text-center"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>';
+                    }
+                }
+            ]
+        });
+
+        $('#productAttachmentDetailRow').on('click', 'button.close', function () {
+            $('#productAttachmentDetailRow').hide();
+            $('#productAttachmentTableRow').slideDown();
+        });
+
+        $('#productAttachmentTable tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            } else {
+                table.$('tr.active').removeClass('active');
+                $(this).addClass('active');
+            }
+
+            $('#productAttachmentTableRow').slideUp();
+            $('#productAttachmentDetailRow').show();
+
+            var data = table.row(this).data();
+
+            $('#productAttachmentDetail').html('<br><img class="center-block" src="{{ asset('images/loading.gif') }}"><br>');
+
+            $('#productAttachmentDetail').load(Routing.generate('product_attachment_view', {id: data.id}), function (d) {
+                $('.dataTable').DataTable();
+            });
+        });
+    });
+</script>
+
+<br>
+
+<div class="row" id="productAttachmentTableRow">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">All Products</div>
+            <div class="panel-body">
+
+                <table id="productAttachmentTable" class="table table-responsive display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Explicit</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>URL</th>
+                            <th>Explicit</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="productAttachmentDetailRow" style="display: none;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Product Attachment Detail
+            </div>
+            <div class="panel-body" id="productAttachmentDetail"></div>
+        </div>
+    </div>
+</div>
+

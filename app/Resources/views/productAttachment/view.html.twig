@@ -1,0 +1,12 @@
+{% if is_granted('ROLE_ADMIN') %}
+
+    <a class="btn btn-primary ajax-link pull-right" href="{{ path('product_edit', {id: item.id}) }}" data-target="#productDetail"><i class="fa fa-edit"></i> Edit</a>
+
+{% endif %}
+
+<dl class="dl-horizontal">
+
+    <dt>URL</dt>
+    <dd>{{ item.url }}</dd>
+
+</dl>

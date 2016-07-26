@@ -1,0 +1,93 @@
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.jstree.defaults.checkbox.three_state = false;
+        $.jstree.defaults.checkbox.cascade = "undetermined";
+        $.jstree.defaults.checkbox.tie_selection = false;
+
+        $('#categoryTree').jstree({
+            "plugins": ["wholerow", "checkbox"],
+            'core': {
+                'data': {
+                    'url': function (node) {
+                        if (node.id === '#') {
+                            return Routing.generate('product_category_tree', {productId: {{ item.id }}});
+                        } else {
+                            return Routing.generate('product_category_tree', {productId: {{ item.id }}, parentId: node.id});
+                        }
+                    },
+                    'data': function (node) {
+                        return {'id': node.id};
+                    }
+                }
+            }
+        }).on('check_node.jstree', function (e, data) {
+            $.post(Routing.generate('product_add_category', {productId: {{ item.id }}}), {categoryId: data.node.id}, function (response) {
+                if (response.code === 100 && response.success) {
+                    console.log("Product Updated");
+                }
+            }
+            );
+        }).on('uncheck_node.jstree', function (e, data) {
+            $.post(Routing.generate('product_remove_category', {productId: {{ item.id }}}), {categoryId: data.node.id}, function (response) {
+                if (response.code === 100 && response.success) {
+                    console.log("Product Updated");
+                }
+            }
+            );
+        });
+        $('.setPrimary').on('click', function () {
+            $('.setPrimary').each(function (x, v) {
+                if (v !== this) {
+                    v.checked = false;
+                }
+            });
+            $.post(Routing.generate('product_set_primary_attachment', {productId: {{ item.id }}}), {attachmentId: this.value}, function (response) {
+                if (response.code === 100 && response.success) {
+                    console.log("Attachment made primary");
+                }
+            }, "json");
+        });
+        
+    });
+</script>
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        <form class="form form-horizontal ajax-form" action="{{ path('product_edit', {id: item.id}) }}" method="post" data-target="#productDetail" data-reload="#productTable">
+
+            {{ form_widget(form) }}
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        Categories
+
+        <div id="categoryTree" style="overflow:hidden;"></div>
+        
+        <hr>
+
+        {% for attachment in item.attachments %}
+
+            <img src="{{ image(attachment.url).resize(100,100) }}">
+
+        {% endfor %}
+
+    </div>
+
+</div>
+        
+<a class="btn btn-danger ajax-link pull-right" href="{{ path('product_view', {id: item.id}) }}" data-target="#productDetail">Cancel</a>
