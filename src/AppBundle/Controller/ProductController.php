@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\ProductType;
+use AppBundle\Form\Type\ProductFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -94,7 +94,7 @@ class ProductController extends Controller {
 
         $item = $this->getDoctrine()->getRepository('AppBundle:Product')->find($id);
 
-        $form = $this->createForm(ProductType::class, $item);
+        $form = $this->createForm(ProductFormType::class, $item);
 
         $form->handleRequest($request);
 

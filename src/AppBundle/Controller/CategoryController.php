@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\CategoryType;
+use AppBundle\Form\Type\CategoryFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -86,7 +86,7 @@ class CategoryController extends Controller {
 
         $item = $this->getDoctrine()->getRepository('AppBundle:Category')->find($id);
 
-        $form = $this->createForm(CategoryType::class, $item);
+        $form = $this->createForm(CategoryFormType::class, $item);
 
         $form->handleRequest($request);
 

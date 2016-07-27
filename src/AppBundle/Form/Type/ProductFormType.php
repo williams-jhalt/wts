@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductType extends AbstractType {
+class ProductFormType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('name', TextType::class)
@@ -27,7 +27,7 @@ class ProductType extends AbstractType {
                     'class' => 'AppBundle:ProductType',
                     'choice_label' => 'name'
                 ))
-                ->add('detail', ProductDetailType::class);
+                ->add('detail', ProductDetailFormType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver) {
