@@ -8,9 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
- */
 class DefaultController extends Controller {
 
     /**

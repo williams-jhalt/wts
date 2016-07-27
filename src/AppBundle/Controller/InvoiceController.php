@@ -143,8 +143,6 @@ class InvoiceController extends Controller {
      */
     public function viewPdf($record = null, $sequence = 1) {
         
-        try {
-
         $pdf = $this->get('erp_one_connector_service')->getPdf("invoice", $record, $sequence);
 
         $response = new Response();
@@ -153,9 +151,6 @@ class InvoiceController extends Controller {
 
         return $response;
         
-        } catch(ErpOneException $e) {
-            return new Response($e->getMessage());
-        }
     }
 
 }

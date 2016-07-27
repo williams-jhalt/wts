@@ -163,6 +163,10 @@ class UserController extends Controller {
                     'label' => 'Administrator',
                     'required' => false
                 ))
+                ->add('enabled', CheckboxType::class, array(
+                    'label' => 'Enabled',
+                    'required' => false
+                ))
                 ->getForm();
 
         $form->handleRequest($request);
