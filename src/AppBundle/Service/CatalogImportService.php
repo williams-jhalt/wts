@@ -179,7 +179,7 @@ class CatalogImportService {
         $i = 0;
 
         foreach ($xmlProducts as $xmlProduct) {
-            
+
             $product = $productRepository->findOneByItemNumber($xmlProduct['sku']);
 
             if (!$product) {
@@ -302,6 +302,7 @@ class CatalogImportService {
                         $this->_em->persist($category);
                         $this->_em->flush($category);
                     }
+                    $product->getCategories()->add($category);
                 }
 
                 $product->setManufacturerItemNumber($data[7]);
