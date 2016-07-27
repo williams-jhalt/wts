@@ -142,6 +142,8 @@ class InvoiceController extends Controller {
      * @Route("/pdf/{record}/{sequence}", name="invoice_viewpdf_file")
      */
     public function viewPdf($record = null, $sequence = 1) {
+        
+        try {
 
         $pdf = $this->get('erp_one_connector_service')->getPdf("invoice", $record, $sequence);
 
@@ -150,6 +152,10 @@ class InvoiceController extends Controller {
         $response->setContent(base64_decode($pdf->document));
 
         return $response;
+        
+        } catch(ErpOneException $e) {
+            return new Response($e->getMessage());
+        }
     }
 
 }

@@ -229,6 +229,8 @@ class ErpOneConnectorService {
      * @param string $type
      * @param string $record
      * @param string|null $seq
+     * 
+     * @throws ErpOneException
      */
     public function getPdf($type, $record, $seq = 1, $ch = null) {
         $closeCurlWhenFinished = false;
