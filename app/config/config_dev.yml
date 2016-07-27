@@ -10,7 +10,7 @@ framework:
 doctrine:
     dbal:
         driver:   pdo_sqlite
-        path: "%kernel.root_dir%/data/dev.db"
+        path: "%kernel.root_dir%/../var/data/dev.db"
         charset:  UTF8
 
 web_profiler:
