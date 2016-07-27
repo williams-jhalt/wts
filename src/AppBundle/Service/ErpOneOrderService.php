@@ -272,6 +272,13 @@ class ErpOneOrderService {
     public function loadOrders() {
 
         $lastOrder = $this->_em->createQuery("SELECT o.orderNumber FROM AppBundle:SalesOrder o ORDER BY o.orderNumber DESC")->setMaxResults(1)->getSingleScalarResult();
+        
+        if ($lastOrder === null) {
+            $today = new DateTime();
+            $todayStr = $today->format('m-d-Y');
+            $t = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND order_date = '{$todayStr}'", "order", 0, 1, $ch);
+            $lastOrder = $t->order;
+        }
 
         $ch = curl_init();
 
