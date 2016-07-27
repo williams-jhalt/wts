@@ -6,32 +6,32 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block stylesheets %} 
             {% stylesheets filter="cssrewrite,scssphp" output='css/compiled/main.css'
-                'assets/vendor/bootstrap/dist/css/bootstrap.css'
-                'assets/vendor/datatables/media/css/dataTables.bootstrap.css'
-                'assets/vendor/datatables-responsive/css/dataTables.responsive.scss'
-                'assets/vendor/metisMenu/dist/metisMenu.css'
-                'assets/vendor/morrisjs/morris.css'
-                'assets/vendor/font-awesome/css/font-awesome.css'
-                'assets/vendor/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css'
-                'assets/vendor/startbootstrap-sb-admin-2/dist/css/timeline.css'
-                'assets/vendor/jstree-bootstrap-theme/dist/themes/default/style.css'
-                'assets/vendor/jstree-bootstrap-theme/dist/themes/proton/style.css'
+                'bower_components/bootstrap/dist/css/bootstrap.css'
+                'bower_components/datatables/media/css/dataTables.bootstrap.css'
+                'bower_components/datatables-responsive/css/dataTables.responsive.scss'
+                'bower_components/metisMenu/dist/metisMenu.css'
+                'bower_components/morrisjs/morris.css'
+                'bower_components/font-awesome/css/font-awesome.css'
+                'bower_components/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css'
+                'bower_components/startbootstrap-sb-admin-2/dist/css/timeline.css'
+                'bower_components/jstree-bootstrap-theme/dist/themes/default/style.css'
+                'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css'
             %}
             <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
         {% endblock %}
         {% block javascripts %}            
             {% javascripts filter="?jsqueeze" output='js/compiled/main.js'
-                'assets/vendor/jquery/dist/jquery.js'
-                'assets/vendor/bootstrap/dist/js/bootstrap.js'
-                'assets/vendor/datatables/media/js/jquery.dataTables.js'
-                'assets/vendor/datatables/media/js/dataTables.bootstrap.js'
-                'assets/vendor/datatables-responsive/js/dataTables.responsive.js'
-                'assets/vendor/metisMenu/dist/metisMenu.js'
-                'assets/vendor/raphael/raphael.js'
-                'assets/vendor/morrisjs/morris.js'
-                'assets/vendor/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'
-                'assets/vendor/jstree-bootstrap-theme/dist/jstree.js'
+                'bower_components/jquery/dist/jquery.js'
+                'bower_components/bootstrap/dist/js/bootstrap.js'
+                'bower_components/datatables/media/js/jquery.dataTables.js'
+                'bower_components/datatables/media/js/dataTables.bootstrap.js'
+                'bower_components/datatables-responsive/js/dataTables.responsive.js'
+                'bower_components/metisMenu/dist/metisMenu.js'
+                'bower_components/raphael/raphael.js'
+                'bower_components/morrisjs/morris.js'
+                'bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'
+                'bower_components/jstree-bootstrap-theme/dist/jstree.js'
             %}
             <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
