@@ -92,7 +92,7 @@ class UserController extends Controller {
         $item = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
         $form = $this->createFormBuilder($item)
-                ->add('password', RepeatedType::class, array(
+                ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'invalid_message' => 'The password fields must match.',
                     'options' => array('attr' => array('class' => 'password-field')),
