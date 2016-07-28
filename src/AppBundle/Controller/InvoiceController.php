@@ -72,6 +72,10 @@ class InvoiceController extends Controller {
         if ($show == 'open') {
             $qb->andWhere('p.open = true');
         }
+        
+        if ($show == 'consolidated') {
+            $qb->andWhere('p.consolidated = true');
+        }
 
 
         foreach ($order as $o) {
