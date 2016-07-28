@@ -105,7 +105,7 @@ class UserController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userManager = $container->get('fos_user.user_manager');
+            $userManager = $this->get('fos_user.user_manager');
             $userManager->updateUser($item);
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('user_edit', array('id' => $item->getId()));
