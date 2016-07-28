@@ -91,7 +91,7 @@ class UserController extends Controller {
 
         $item = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
 
-        $form = $this->createFormBuilder($item)
+        $form = $this->createFormBuilder()
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'invalid_message' => 'The password fields must match.',
@@ -105,7 +105,8 @@ class UserController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->persist($item);
+            $userManager = $container->get('fos_user.user_manager');
+            $userManager->updateUser($item);
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('user_edit', array('id' => $item->getId()));
         }
