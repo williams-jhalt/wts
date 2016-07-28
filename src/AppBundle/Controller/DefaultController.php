@@ -33,5 +33,12 @@ class DefaultController extends Controller {
             'Content-Disposition' => 'inline'
         ));
     }
+    
+    /**
+     * @Route("/keep-alive")
+     */
+    public function keepAliveAction() {
+        return new Response();
+    }
 
 }

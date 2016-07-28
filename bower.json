@@ -19,7 +19,8 @@
   ],
   "dependencies": {
     "startbootstrap-sb-admin-2": "~1.0.8",
-    "jstree-bootstrap-theme": "~1.0.1"
+    "jstree-bootstrap-theme": "~1.0.1",
+    "timeout-dialog-bootstrap": "^1.0.1"
   },
   "resolutions": {
     "bootstrap": "~3.3.6"

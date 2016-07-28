@@ -16,6 +16,8 @@
                 'bower_components/startbootstrap-sb-admin-2/dist/css/timeline.css'
                 'bower_components/jstree-bootstrap-theme/dist/themes/default/style.css'
                 'bower_components/jstree-bootstrap-theme/dist/themes/proton/style.css'
+                'bower_components/timeout-dialog-bootstrap/dist/timeout-dialog-bootstrap.css'
+                
             %}
             <link rel="stylesheet" href="{{ asset_url }}" />
             {% endstylesheets %}
@@ -32,12 +34,18 @@
                 'bower_components/morrisjs/morris.js'
                 'bower_components/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js'
                 'bower_components/jstree-bootstrap-theme/dist/jstree.js'
+                'bower_components/timeout-dialog-bootstrap/dist/timeout-dialog-bootstrap.js'
             %}
             <script src="{{ asset_url }}"></script>
             {% endjavascripts %}
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
             <script type="text/javascript">
+                $(document).ready(function() {
+                    $.timeoutDialog({
+                        
+                    });
+                });
                 $(document).on('click', 'a.ajax-link', function (e) {
                     e.preventDefault();
                     $('.nav a').removeClass('active');
