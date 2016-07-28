@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="invoice")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\InvoiceRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Invoice {
 
@@ -81,9 +82,46 @@ class Invoice {
      */
     private $open;
 
+    /**
+     * @ORM\Column(name="consolidated", type="boolean")
+     */
+    private $consolidated;
+
+    /**
+     * @ORM\Column(name="created_on", type="datetime", nullable=true)
+     */
+    private $createdOn;
+
+    /**
+     * @ORM\Column(name="updated_on", type="datetime", nullable=true)
+     */
+    private $updatedOn;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="invoice_number", type="string", length=255, nullable=true)
+     */
+    private $invoiceNumber;
+
     public function __construct() {
         $this->items = new ArrayCollection();
         $this->open = true;
+        $this->consolidated = false;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist() {
+        $this->createdOn = new DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate() {
+        $this->updatedOn = new DateTime();
     }
 
     /**
@@ -173,6 +211,42 @@ class Invoice {
 
     public function setCustomerNumber($customerNumber) {
         $this->customerNumber = $customerNumber;
+        return $this;
+    }
+
+    public function getConsolidated() {
+        return $this->consolidated;
+    }
+
+    public function getInvoiceNumber() {
+        return $this->invoiceNumber;
+    }
+
+    public function setConsolidated($consolidated) {
+        $this->consolidated = $consolidated;
+        return $this;
+    }
+
+    public function setInvoiceNumber($invoiceNumber) {
+        $this->invoiceNumber = $invoiceNumber;
+        return $this;
+    }
+
+    public function getCreatedOn() {
+        return $this->createdOn;
+    }
+
+    public function getUpdatedOn() {
+        return $this->updatedOn;
+    }
+
+    public function setCreatedOn($createdOn) {
+        $this->createdOn = $createdOn;
+        return $this;
+    }
+
+    public function setUpdatedOn($updatedOn) {
+        $this->updatedOn = $updatedOn;
         return $this;
     }
 

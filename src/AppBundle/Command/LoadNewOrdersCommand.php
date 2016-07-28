@@ -20,6 +20,7 @@ class LoadNewOrdersCommand extends ContainerAwareCommand {
         $output->write("Beginning erp order load...\n");
         try {
             $service->loadOrders();
+            $service->loadConsolidatedInvoices();
         } catch (Exception $e) {
             $output->writeln("There was an error loading open orders: " . $e->getMessage());
         }

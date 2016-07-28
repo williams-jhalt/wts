@@ -20,6 +20,7 @@ class UpdateOpenSalesOrdersCommand extends ContainerAwareCommand {
         $output->write("Beginning erp order update...\n");
         try {
             $service->updateOpenSalesOrders();
+            $service->updateOpenConsolidatedInvoices();
         } catch (Exception $e) {
             $output->writeln("There was an error updating open orders: " . $e->getMessage());
         }

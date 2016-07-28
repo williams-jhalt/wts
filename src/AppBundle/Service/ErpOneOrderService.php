@@ -23,7 +23,7 @@ class ErpOneOrderService {
      * @var EntityManager
      */
     private $_em;
-    private $headerFields = "oe_head.customer,oe_head.cu_po,oe_head.ord_ext,oe_head.sy_lookup,oe_head.opn,oe_head.ord_date,oe_head.o_tot_gross,oe_head.order,oe_head.rec_seq,oe_head.ship_atn,oe_head.name,oe_head.adr,oe_head.state,oe_head.country_code,oe_head.postal_code,oe_head.ship_via_code,oe_head.stat,oe_head.Manifest_id,oe_head.c_tot_gross,oe_head.c_tot_net_ar,oe_head.c_tot_code_amt,oe_head.rec_type,oe_head.ar_type";
+    private $headerFields = "oe_head.customer,oe_head.cu_po,oe_head.ord_ext,oe_head.sy_lookup,oe_head.opn,oe_head.ord_date,oe_head.o_tot_gross,oe_head.order,oe_head.rec_seq,oe_head.ship_atn,oe_head.name,oe_head.adr,oe_head.state,oe_head.country_code,oe_head.postal_code,oe_head.ship_via_code,oe_head.stat,oe_head.Manifest_id,oe_head.c_tot_gross,oe_head.c_tot_net_ar,oe_head.c_tot_code_amt,oe_head.rec_type,oe_head.ar_type,oe_head.consolidated_order,oe_head.invoice";
     private $itemFields = "oe_line.item,oe_line.descr,oe_line.price,oe_line.q_ord,oe_line.q_comm,oe_line.q_itd,oe_line.rec_type";
 
     public function __construct(ErpOneConnectorService $erp, EntityManager $em) {
@@ -160,6 +160,8 @@ class ErpOneOrderService {
                     $invoice->setFreightCharge($erpObj->oe_head_c_tot_code_amt[0]);
                     $invoice->setShippingAndHandlingCharge($erpObj->oe_head_c_tot_code_amt[1]);
                     $invoice->setOpen($erpObj->oe_head_opn);
+                    $invoice->setInvoiceNumber($erpObj->oe_head_invoice);
+                    $invoice->setConsolidated($erpObj->oe_head_consolidated_order);
                 }
 
                 foreach ($oeLineResponse as $erpItem) {
@@ -272,7 +274,7 @@ class ErpOneOrderService {
     public function loadOrders() {
 
         $lastOrder = $this->_em->createQuery("SELECT o.orderNumber FROM AppBundle:SalesOrder o ORDER BY o.orderNumber DESC")->setMaxResults(1)->getSingleScalarResult();
-        
+
         $ch = curl_init();
 
         $start = 0;
@@ -290,6 +292,43 @@ class ErpOneOrderService {
         } while (!empty($oeHeadResponse));
 
         curl_close($ch);
+    }
+
+    public function loadConsolidatedInvoices() {
+
+        $ch = curl_init();
+
+        $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND opn = yes AND consolidated_order = yes");
+
+        $this->_loadFromErp($oeHeadResponse);
+
+        curl_close($ch);
+        
+    }
+    
+    public function updateOpenConsolidatedInvoices() {
+
+        $openConsInv = $this->_em->getRepository('AppBundle:Invoice')
+                ->createQueryBuilder('o')
+                ->where('o.open = true')
+                ->andWhere('o.consolidated = true')
+                ->andWhere('o.updatedOn < :timeAgo OR o.updatedOn is null')
+                ->setParameter('timeAgo', new DateTime('now -15 minutes'))
+                ->getQuery()
+                ->getResult();
+
+        $ch = curl_init();
+
+        foreach ($openConsInv as $t) {
+
+            $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND rec_type = 'I' AND order = '{$t->getOrderNumber()}'", $this->headerFields, 0, 5000, $ch);
+            $oeLineResponse = $this->_erp->read("FOR EACH oe_line NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND rec_type = 'I' AND order = '{$t->getOrderNumber()}'", $this->itemFields, 0, 5000, $ch);            
+
+            $this->_loadFromErp($oeHeadResponse, $oeLineResponse);
+        }
+
+        curl_close($ch);
+        
     }
 
 }
