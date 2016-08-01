@@ -42,9 +42,7 @@
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
-                    $.timeoutDialog({
-                        
-                    });
+                    $.timeoutDialog();
                 });
                 $(document).on('click', 'a.ajax-link', function (e) {
                     e.preventDefault();

@@ -298,7 +298,7 @@ class ErpOneOrderService {
 
         $ch = curl_init();
 
-        $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND opn = yes AND consolidated_order = yes");
+        $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND invc_date > today - 7 AND consolidated_order = yes");
 
         $this->_loadFromErp($oeHeadResponse);
 
@@ -310,7 +310,7 @@ class ErpOneOrderService {
 
         $openConsInv = $this->_em->getRepository('AppBundle:Invoice')
                 ->createQueryBuilder('o')
-                ->where('o.open = true')
+                ->where('SIZE(o.items) = 0')
                 ->andWhere('o.consolidated = true')
                 ->andWhere('o.updatedOn < :timeAgo OR o.updatedOn is null')
                 ->setParameter('timeAgo', new DateTime('now -15 minutes'))
