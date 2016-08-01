@@ -23,7 +23,7 @@ class ErpOneOrderService {
      * @var EntityManager
      */
     private $_em;
-    private $headerFields = "oe_head.customer,oe_head.cu_po,oe_head.ord_ext,oe_head.sy_lookup,oe_head.opn,oe_head.ord_date,oe_head.o_tot_gross,oe_head.order,oe_head.rec_seq,oe_head.ship_atn,oe_head.name,oe_head.adr,oe_head.state,oe_head.country_code,oe_head.postal_code,oe_head.ship_via_code,oe_head.stat,oe_head.Manifest_id,oe_head.c_tot_gross,oe_head.c_tot_net_ar,oe_head.c_tot_code_amt,oe_head.rec_type,oe_head.ar_type,oe_head.consolidated_order,oe_head.invoice";
+    private $headerFields = "oe_head.customer,oe_head.cu_po,oe_head.ord_ext,oe_head.sy_lookup,oe_head.opn,oe_head.ord_date,oe_head.o_tot_gross,oe_head.order,oe_head.rec_seq,oe_head.ship_atn,oe_head.name,oe_head.adr,oe_head.state,oe_head.country_code,oe_head.postal_code,oe_head.ship_via_code,oe_head.stat,oe_head.Manifest_id,oe_head.c_tot_gross,oe_head.c_tot_net_ar,oe_head.c_tot_code_amt,oe_head.rec_type,oe_head.ar_type,oe_head.consolidated_order,oe_head.invoice,oe_head.invc_date";
     private $itemFields = "oe_line.item,oe_line.descr,oe_line.price,oe_line.q_ord,oe_line.q_comm,oe_line.q_itd,oe_line.rec_type";
 
     public function __construct(ErpOneConnectorService $erp, EntityManager $em) {
@@ -162,6 +162,7 @@ class ErpOneOrderService {
                     $invoice->setOpen($erpObj->oe_head_opn);
                     $invoice->setInvoiceNumber($erpObj->oe_head_invoice);
                     $invoice->setConsolidated($erpObj->oe_head_consolidated_order);
+                    $invoice->setInvoiceDate(new DateTime($erpObj->oe_head_invc_date));
                 }
 
                 foreach ($oeLineResponse as $erpItem) {

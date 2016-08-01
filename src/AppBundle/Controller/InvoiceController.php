@@ -90,12 +90,10 @@ class InvoiceController extends Controller {
 
         foreach ($items as $item) {
 
-            $salesOrder = $this->getDoctrine()->getRepository('AppBundle:SalesOrder')->findOneBy(array('orderNumber' => $item->getOrderNumber()));
-
             $pageItems[] = array(
                 'id' => $item->getId(),
                 'orderNumber' => $item->getOrderNumber(),
-                'orderDate' => $salesOrder->getOrderDate(),
+                'invoiceDate' => $item->getInvoiceDate(),
                 'grossAmount' => $item->getGrossAmount(),
                 'freightCharge' => $item->getFreightCharge(),
                 'shippingAndHandlingCharge' => $item->getShippingAndHandlingCharge(),

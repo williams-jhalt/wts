@@ -105,6 +105,11 @@ class Invoice {
      */
     private $invoiceNumber;
 
+    /**
+     * @ORM\Column(name="invoice_date", type="datetime", nullable=true)
+     */
+    private $invoiceDate;
+
     public function __construct() {
         $this->items = new ArrayCollection();
         $this->open = true;
@@ -248,6 +253,15 @@ class Invoice {
 
     public function setUpdatedOn($updatedOn) {
         $this->updatedOn = $updatedOn;
+        return $this;
+    }
+
+    public function getInvoiceDate() {
+        return $this->invoiceDate;
+    }
+
+    public function setInvoiceDate($invoiceDate) {
+        $this->invoiceDate = $invoiceDate;
         return $this;
     }
 

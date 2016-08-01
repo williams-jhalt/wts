@@ -16,8 +16,8 @@
             "columns": [
                 {"data": "orderNumber", "name": "p.orderNumber"},
                 {
-                    "data": "orderDate",
-                    "name": "orderDate",
+                    "data": "invoiceDate",
+                    "name": "invoiceDate",
                     "render": function (data) {
                         var date = new Date(data.date);
                         return date.toDateString();
@@ -99,7 +99,7 @@
                     <thead>
                         <tr>
                             <th>Invoice Number</th>
-                            <th>Order Date</th>
+                            <th>Invoice Date</th>
                             <th>Gross Amt.</th>
                             <th>Freight</th>
                             <th>S&amp;H</th>
@@ -110,7 +110,7 @@
                     <tfoot>
                         <tr>
                             <th>Invoice Number</th>
-                            <th>Order Date</th>
+                            <th>Invoice Date</th>
                             <th>Gross Amt.</th>
                             <th>Freight</th>
                             <th>S&amp;H</th>
