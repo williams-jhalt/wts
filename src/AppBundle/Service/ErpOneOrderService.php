@@ -163,9 +163,15 @@ class ErpOneOrderService {
                     $invoice->setInvoiceNumber($erpObj->oe_head_invoice);
                     $invoice->setConsolidated($erpObj->oe_head_consolidated_order);
                     $invoice->setInvoiceDate(new DateTime($erpObj->oe_head_invc_date));
+                    $invoice->setKeywords($erpObj->oe_head_sy_lookup);
                 }
 
                 foreach ($oeLineResponse as $erpItem) {
+
+                    if (preg_match('/Our Order.*/', $erpItem->oe_line_descr[0])) {
+                        continue;
+                    }
+
                     if ($erpItem->oe_line_rec_type == "I") {
                         $item = $this->_em->getRepository('AppBundle:InvoiceItem')->findOneBy(array('invoice' => $invoice, 'itemNumber' => $erpItem->oe_line_item));
                         if ($item === null) {
@@ -274,8 +280,6 @@ class ErpOneOrderService {
 
     public function loadOrders() {
 
-        $lastOrder = $this->_em->createQuery("SELECT o.orderNumber FROM AppBundle:SalesOrder o ORDER BY o.orderNumber DESC")->setMaxResults(1)->getSingleScalarResult();
-
         $ch = curl_init();
 
         $start = 0;
@@ -283,7 +287,7 @@ class ErpOneOrderService {
 
         do {
 
-            $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND order > '{$lastOrder}'", $this->headerFields, $start, $count, $ch);
+            $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND opn = yes AND ord_date > today - 7", $this->headerFields, $start, $count, $ch);
 
             if (!empty($oeHeadResponse)) {
                 $this->_loadFromErp($oeHeadResponse);
@@ -299,14 +303,23 @@ class ErpOneOrderService {
 
         $ch = curl_init();
 
-        $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND invc_date > today - 7 AND consolidated_order = yes", $this->headerFields);
+        $start = 0;
+        $count = 1000;
 
-        $this->_loadFromErp($oeHeadResponse);
+        do {
+
+            $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND invc_date > today - 7 AND consolidated_order = yes", $this->headerFields, $start, $count, $ch);
+
+            if (!empty($oeHeadResponse)) {
+                $this->_loadFromErp($oeHeadResponse);
+            }
+
+            $start = $start + $count;
+        } while (!empty($oeHeadResponse));
 
         curl_close($ch);
-        
     }
-    
+
     public function updateOpenConsolidatedInvoices() {
 
         $openConsInv = $this->_em->getRepository('AppBundle:Invoice')
@@ -323,13 +336,12 @@ class ErpOneOrderService {
         foreach ($openConsInv as $t) {
 
             $oeHeadResponse = $this->_erp->read("FOR EACH oe_head NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND rec_type = 'I' AND order = '{$t->getOrderNumber()}'", $this->headerFields, 0, 5000, $ch);
-            $oeLineResponse = $this->_erp->read("FOR EACH oe_line NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND rec_type = 'I' AND order = '{$t->getOrderNumber()}'", $this->itemFields, 0, 5000, $ch);            
+            $oeLineResponse = $this->_erp->read("FOR EACH oe_line NO-LOCK WHERE company_oe = '{$this->_erp->getCompany()}' AND rec_type = 'I' AND order = '{$t->getOrderNumber()}'", $this->itemFields, 0, 5000, $ch);
 
             $this->_loadFromErp($oeHeadResponse, $oeLineResponse);
         }
 
         curl_close($ch);
-        
     }
 
 }

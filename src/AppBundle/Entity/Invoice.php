@@ -110,6 +110,13 @@ class Invoice {
      */
     private $invoiceDate;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="keywords", type="text", nullable=true)
+     */
+    private $keywords;
+
     public function __construct() {
         $this->items = new ArrayCollection();
         $this->open = true;
@@ -262,6 +269,15 @@ class Invoice {
 
     public function setInvoiceDate($invoiceDate) {
         $this->invoiceDate = $invoiceDate;
+        return $this;
+    }
+
+    public function getKeywords() {
+        return $this->keywords;
+    }
+
+    public function setKeywords($keywords) {
+        $this->keywords = $keywords;
         return $this;
     }
 

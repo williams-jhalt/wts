@@ -4,6 +4,12 @@
     </p>
 {% endif %}
 
+{% if not item.consolidated and item.invoiceNumber %}
+    <p class="pull-right">
+        This invoice is part of a consolidation
+    </p>
+{% endif %}
+
 <dl class="dl-horizontal">
 
     <dt>Invoice Number</dt>
